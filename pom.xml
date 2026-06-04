@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.ai.center.study</groupId>
+    <artifactId>lizw-sctest-center_hd</artifactId>
+    <packaging>jar</packaging>
+    <version>0.0.1-SNAPSHOT</version>
+
+	<properties>
+
+        <!-- spring boot 2.2.6.RELEASE 内部jar能包含 -->
+        <spring.version>5.2.5.RELEASE</spring.version>
+        <spring-boot.version>2.7.2</spring-boot.version>
+		<guava.version>28.2-jre</guava.version>
+        <hibernate.version>4.3.11.Final</hibernate.version>
+        <spring-data-jpa.version>1.11.0.RELEASE</spring-data-jpa.version>
+         <tomcat-jdbc.version>7.0.77</tomcat-jdbc.version>
+		<swagger-annotations.version>1.6.0</swagger-annotations.version>
+
+        <!-- Plugin的属性 -->
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compilerPlugin.version>3.8.1</maven.compilerPlugin.version>
+
+
+    </properties>
+
+    <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<!-- Import dependency management from Spring Boot -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+    		  <groupId>org.seleniumhq.selenium</groupId>
+    		  <artifactId>selenium-java</artifactId>
+    		  <version>4.1.4</version>
+		    </dependency>
+		    <dependency>
+			  <groupId>org.apache.commons</groupId>
+			  <artifactId>commons-lang3</artifactId>
+			  <version>3.12.0</version>
+		   </dependency>
+		   <dependency>
+  		     <groupId>wsdl4j</groupId>
+  			 <artifactId>wsdl4j</artifactId>
+  			 <version>1.6.3</version>
+		  </dependency>
+		          <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		</dependencies>
+	</dependencyManagement>
+        <!-- 私库配置, 私库的优先级比中央仓库的优先级高-->
+    <repositories>
+         <repository>
+            <id>test</id>
+            <name>test</name>
+            <url>
+                http://nexus.zj.chinamobile.com:8081/nexus/content/groups/public
+            </url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+          <id>aliyun</id>
+          <url>https://maven.aliyun.com/repository/public</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+         <pluginRepository>
+            <id>test</id>
+            <name>test</name>
+            <url>
+                http://nexus.zj.chinamobile.com:8081/nexus/content/groups/public
+            </url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+          <id>aliyun</id>
+          <url>https://maven.aliyun.com/repository/public</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+
+        <!-- spring boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+		<!-- PERSISTENCE begin -->
+		<!-- hibernate -->
+        <dependency>
+			<groupId>com.googlecode.log4jdbc</groupId>
+			<artifactId>log4jdbc</artifactId>
+			<version>1.2</version>
+			<scope>runtime</scope>
+		</dependency>
+        <dependency>
+           <groupId>com.oracle</groupId>
+           <artifactId>ojdbc6</artifactId>
+           <version>12.1.0.1.0</version>
+        </dependency>
+		<!-- PERSISTENCE end -->
+
+		<dependency>
+  			<groupId>com.asiainfo.crm.other</groupId>
+  			<artifactId>guava</artifactId>
+  			<version>18.0</version>
+		</dependency>
+		<!-- 文档框架 -->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger-annotations.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+              <groupId>com.asiainfo.crm.other</groupId>
+              <artifactId>jaxrpc</artifactId>
+              <version>1.0</version>
+        </dependency>
+        <dependency>
+              <groupId>com.asiainfo.crm.other</groupId>
+              <artifactId>axis</artifactId>
+              <version>1.0</version>
+        </dependency>
+        <dependency>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
+              <version>1.2</version>
+        </dependency>
+        <dependency>
+              <groupId>commons-discovery</groupId>
+              <artifactId>commons-discovery</artifactId>
+              <version>1.0</version>
+        </dependency>
+		<dependency>
+  		    <groupId>wsdl4j</groupId>
+  			<artifactId>wsdl4j</artifactId>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+		<dependency>
+           <groupId>org.tmatesoft.svnkit</groupId>
+           <artifactId>svnkit</artifactId>
+           <version>1.9.3</version>
+        </dependency>
+	    <dependency>
+    		<groupId>org.seleniumhq.selenium</groupId>
+    		<artifactId>selenium-java</artifactId>
+		</dependency>
+		<dependency>
+            <groupId>com.asiainfo.crm.apache</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.1</version>
+        </dependency>
+        <dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+		<dependency>
+              <groupId>com.alibaba</groupId>
+              <artifactId>fastjson</artifactId>
+              <version>1.2.37</version>
+        </dependency>
+        <dependency>
+              <groupId>com.asiainfo.crm.appframe</groupId>
+              <artifactId>secframe</artifactId>
+              <version>1.2</version>
+         </dependency>
+         <dependency>
+              <groupId>org.quartz-scheduler</groupId>
+              <artifactId>quartz</artifactId>
+              <version>2.3.2</version>
+         </dependency>
+        <dependency>
+             <groupId>commons-lang</groupId>
+             <artifactId>commons-lang</artifactId>
+             <version>2.6</version>
+        </dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-all</artifactId>
+  			<version>4.1.45.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.16</version>
+			<scope>provided</scope>
+		</dependency>
+	<dependency>
+  		<groupId>com.ai.msp.csf</groupId>
+  		<artifactId>aicommon-csf</artifactId>
+  		<version>3.2.3</version>
+	</dependency>
+	<dependency>
+            <groupId>antDB</groupId>
+            <artifactId>antdb</artifactId>
+            <version>6.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compilerPlugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<!-- Hibernate生成实体配置 -->
+			<!-- -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>2.2</version>
+
+				<dependencies>
+					<dependency>
+						<groupId>com.asiainfo.jdbc</groupId>
+						<artifactId>ojdbc</artifactId>
+						<version>6.0</version>
+						<scope>system</scope>
+						<systemPath>${project.basedir}/src/lib/ojdbc-6.0.jar</systemPath>
+					</dependency>
+					<dependency>
+						<groupId>cglib</groupId>
+						<artifactId>cglib</artifactId>
+						<version>3.2.4</version>
+					</dependency>
+				</dependencies>
+
+				<configuration>
+					<components>
+						<component>
+							<name>hbm2java</name>
+							<outputDirectory>src/main/java</outputDirectory>
+							<!-- 主要用于反向控制数据库引擎通过JDBC连接数据 -->
+							<implementation>jdbcconfiguration</implementation>
+						</component>
+						<component>
+							<name>hbm2ddl</name>
+							<implementation>jdbcconfiguration</implementation>
+							<outputDirectory>src/main/db</outputDirectory>
+						</component>
+					</components>
+					<componentProperties>
+						<!-- Hibernate配置文件 -->
+						<configurationfile>src/test/resources/hibernate.cfg.xml</configurationfile>
+						<revengfile>src/test/resources/hibernate.reveng.xml</revengfile>
+
+						<!-- 如果设为true将会生成JPA的元素注解 使用annotations from javax.persistence and
+							org.hibernate.annotations 默认值是false -->
+
+						<ejb3>true</ejb3>
+
+						<!-- 指明生成java类的包名 -->
+						<packagename>com.ai.center.study.domain</packagename>
+
+						<outputfilename>schema.ddl</outputfilename>
+						<drop>false</drop>
+						<create>true</create>
+						<export>false</export>
+						<format>true</format>
+					</componentProperties>
+				</configuration>
+			</plugin>
+			<!-- Hibernate生成实体配置 -->
+
+
+			<plugin>
+			<groupId>com.asiainfo</groupId>
+				<artifactId>hibernate-maven-plugin</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>${spring-boot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
