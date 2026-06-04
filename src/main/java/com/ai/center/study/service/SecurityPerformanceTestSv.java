@@ -8,10 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-
-import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
@@ -20,7 +17,6 @@ import com.ai.center.study.service.dto.SecurityPerformanceTestRequest;
 
 
 @Service
-@Transactional
 public class SecurityPerformanceTestSv {
     final static String aiga_tns = "jdbc:postgresql://10.179.95.94:6432/teu?targetServerType=master&binaryTransfer=False&forceBinary=False&reWriteBatchedInserts=true&grammar=oracle&prepareThreshold=0";
     final static String aiga_user = "teu1";
@@ -29,7 +25,7 @@ public class SecurityPerformanceTestSv {
 	public IndivCustEntity getCustomerColumnLimitOne() throws SQLException{
 		String result="";
 		//【修复：改用?占位符，防SQL注入】
-	    String sql="select * from cm_indiv_customer_lizw_574 a limit 1";
+	    String sql="select * from cm_indiv_customer_hd_574 a limit 1";
 	    Connection conn = null;
 	    PreparedStatement psCon = null;
 	    ResultSet rs = null;
@@ -96,7 +92,7 @@ public class SecurityPerformanceTestSv {
 		public List<IndivCustEntity> getCustomerColumnLimit1k() throws SQLException{
 			String result="";
 			//【修复：改用?占位符，防SQL注入】
-		    String sql="select * from cm_indiv_customer_lizw_574 a limit 1000";
+		    String sql="select * from cm_indiv_customer_hd_574 a limit 1000";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -164,7 +160,7 @@ public class SecurityPerformanceTestSv {
 	public IndivCustEntity getOneByCustName(SecurityPerformanceTestRequest request) throws SQLException{
 		String result="";
 		//【修复：改用?占位符，防SQL注入】
-	    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name=? limit 1";
+	    String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? limit 1";
 	    Connection conn = null;
 	    PreparedStatement psCon = null;
 	    ResultSet rs = null;
@@ -232,7 +228,7 @@ public class SecurityPerformanceTestSv {
 	public List<IndivCustEntity> getCustomerLimit1kByCustName(SecurityPerformanceTestRequest request) throws SQLException{
 		String result="";
 		//【修复：改用?占位符，防SQL注入】
-	    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name=? limit 1000";
+	    String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? limit 1000";
 	    Connection conn = null;
 	    PreparedStatement psCon = null;
 	    ResultSet rs = null;
@@ -297,12 +293,12 @@ public class SecurityPerformanceTestSv {
 	    }
 	    return entitys;
 	}
-	
+
 	 //带等于多个加密字段返回单条单加密字段
 		public IndivCustEntity getOneByCustNameAndCertCode(SecurityPerformanceTestRequest request) throws SQLException{
 			String result="";
 			//【修复：改用?占位符，防SQL注入】
-		    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name=? and cust_cert_code=? limit 1";
+		    String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? and cust_cert_code=? limit 1";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -367,12 +363,12 @@ public class SecurityPerformanceTestSv {
 		    }
 		    return entity;
 		}
-		
+
 	    //带等于多加密字段返回单条1000加密字段
 		public List<IndivCustEntity> getCustomerLimit1kByCustNameAndCertCode(SecurityPerformanceTestRequest request) throws SQLException{
 			String result="";
 			//【修复：改用?占位符，防SQL注入】
-		    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name=? and cust_cert_code=? limit 1000";
+		    String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? and cust_cert_code=? limit 1000";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -437,10 +433,10 @@ public class SecurityPerformanceTestSv {
 		    }
 		    return entitys;
 		}
-		
+
 		// 带模糊查询单个加密字段返回单条
 		public IndivCustEntity getOneByCustNameLike(SecurityPerformanceTestRequest request) throws SQLException{
-		    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name like ? limit 1 ";
+		    String sql="select * from cm_indiv_customer_hd_574 a where cust_name like ? limit 1 ";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -504,12 +500,12 @@ public class SecurityPerformanceTestSv {
 		    }
 		    return entity;
 		}
-		
+
 	    //模糊查询加密字段返回1000
 		public List<IndivCustEntity> getCustomerLimit1kByCustNameLike(SecurityPerformanceTestRequest request) throws SQLException{
 			String result="";
 			//【修复：改用?占位符，防SQL注入】
-		    String sql="select * from cm_indiv_customer_lizw_574 a where cust_name like ?  limit 1000";
+		    String sql="select * from cm_indiv_customer_hd_574 a where cust_name like ?  limit 1000";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -575,9 +571,9 @@ public class SecurityPerformanceTestSv {
 		    return entitys;
 		}
 		public IndivCustEntity getCustomerTest(SecurityPerformanceTestRequest request) throws SQLException{
-		
+
 			//【修复：改用?占位符，防SQL注入】
-		    String sql="select * from cm_indiv_customer_lizw_574 a where indiv_Cust_id=?";
+		    String sql="select * from cm_indiv_customer_hd_574 a where indiv_Cust_id=?";
 		    Connection conn = null;
 		    PreparedStatement psCon = null;
 		    ResultSet rs = null;
@@ -588,7 +584,7 @@ public class SecurityPerformanceTestSv {
 		        // 给占位符赋值
 		        psCon.setBigDecimal(1, request.getIndivCustId());
 		        rs = psCon.executeQuery();
-	
+
 		        while(rs.next()){
 		            // 实例化实体
 		            entity = new IndivCustEntity();
@@ -651,7 +647,7 @@ public class SecurityPerformanceTestSv {
 	 */
 	public int insertIndivCust(SecurityPerformanceTestRequest entity) throws SQLException {
 	    // 插入 SQL（字段按你的表结构写全）
-	    String sql = "INSERT INTO cm_indiv_customer_lizw_574 (" +
+	    String sql = "INSERT INTO cm_indiv_customer_hd_574 (" +
 	            "indiv_cust_id, base_cust_id, cust_name, cust_status, cust_zipcode, cust_address, " +
 	            "cust_level, cust_cert_type, cust_cert_code, cust_cert_address, cust_cert_expire, " +
 	            "gender, lunar, birthday, occupation, real_name_flag, contract_no, character_desc, " +
@@ -737,7 +733,7 @@ public class SecurityPerformanceTestSv {
 	 */
 	public int batchInsertIndivCust(List<SecurityPerformanceTestRequest> list) throws SQLException {
 	    // 插入 SQL（和你原来完全一致）
-	    String sql = "INSERT INTO cm_indiv_customer_lizw_574 (" +
+	    String sql = "INSERT INTO cm_indiv_customer_hd_574 (" +
 	            "indiv_cust_id, base_cust_id, cust_name, cust_status, cust_zipcode, cust_address, " +
 	            "cust_level, cust_cert_type, cust_cert_code, cust_cert_address, cust_cert_expire, " +
 	            "gender, lunar, birthday, occupation, real_name_flag, contract_no, character_desc, " +

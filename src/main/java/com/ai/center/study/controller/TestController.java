@@ -3,16 +3,10 @@ package com.ai.center.study.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ai.center.study.domain.IndivCustEntity;
-import com.ai.center.study.domain.JsonBean;
 
 import com.ai.center.study.service.SecurityPerformanceTestSv;
 import com.ai.center.study.service.dto.SecurityPerformanceTestRequest;
