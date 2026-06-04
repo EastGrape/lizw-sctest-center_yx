@@ -377,7 +377,8 @@ public class SecurityPerformanceSDKTestSv {
 		        conn = DriverManager.getConnection(aiga_tns, aiga_user, aiga_passwd);
 		        psCon = conn.prepareStatement(sql);
 		        // 给占位符赋值
-		        psCon.setString(1, request.getCustCertCode());
+				psCon.setString(1, request.getCustName());
+				psCon.setString(2, request.getCustCertCode());
 		        rs = psCon.executeQuery();
 
 		        while(rs.next()){
