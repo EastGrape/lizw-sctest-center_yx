@@ -27,7 +27,7 @@ public class SecurityPerformanceSDKTestSv {
 	public IndivCustEntity getCustomerColumnLimitOne() throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a limit 1";
+		String sql="select * from cm_indiv_customer_yx_574 a limit 1";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -69,7 +69,7 @@ public class SecurityPerformanceSDKTestSv {
 	public List<IndivCustEntity> getCustomerColumnLimit1k() throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a limit 1000";
+		String sql="select * from cm_indiv_customer_yx_574 a limit 1000";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -112,7 +112,7 @@ public class SecurityPerformanceSDKTestSv {
 	public IndivCustEntity getOneByCustName(SecurityPerformanceTestRequest request) throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a where phone_number=? limit 1";
+		String sql="select * from cm_indiv_customer_yx_574 a where phone_number=? limit 1";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -155,7 +155,7 @@ public class SecurityPerformanceSDKTestSv {
 	public List<IndivCustEntity> getCustomerLimit1kByCustName(SecurityPerformanceTestRequest request) throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a where phone_number=? limit 1000";
+		String sql="select * from cm_indiv_customer_yx_574 a where phone_number=? limit 1000";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -200,7 +200,7 @@ public class SecurityPerformanceSDKTestSv {
 	public IndivCustEntity getOneByCustNameAndCertCode(SecurityPerformanceTestRequest request) throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? and cust_address=? and cust_cert_code=? and phone_number=? limit 1";
+		String sql="select * from cm_indiv_customer_yx_574 a where cust_name=? and cust_address=? and cust_cert_code=? and phone_number=? limit 1";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -247,7 +247,7 @@ public class SecurityPerformanceSDKTestSv {
 	public List<IndivCustEntity> getCustomerLimit1kByCustNameAndCertCode(SecurityPerformanceTestRequest request) throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a where cust_name=? and cust_address=? and cust_cert_code=? and phone_number=?  limit 1000";
+		String sql="select * from cm_indiv_customer_yx_574 a where cust_name=? and cust_address=? and cust_cert_code=? and phone_number=?  limit 1000";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -293,7 +293,7 @@ public class SecurityPerformanceSDKTestSv {
 
 	// 带模糊查询单个加密字段返回单条
 	public IndivCustEntity getOneByCustNameLike(SecurityPerformanceTestRequest request) throws SQLException{
-		String sql="select * from cm_indiv_customer_hd_574 a where cust_address like ? limit 1 ";
+		String sql="select * from cm_indiv_customer_yx_574 a where cust_address like ? limit 1 ";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -337,7 +337,7 @@ public class SecurityPerformanceSDKTestSv {
 	public List<IndivCustEntity> getCustomerLimit1kByCustNameLike(SecurityPerformanceTestRequest request) throws SQLException{
 
 		//【修复：改用?占位符，防SQL注入】
-		String sql="select * from cm_indiv_customer_hd_574 a where cust_address like ?  limit 1000";
+		String sql="select * from cm_indiv_customer_yx_574 a where cust_address like ?  limit 1000";
 		Connection conn = null;
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
@@ -386,7 +386,7 @@ public class SecurityPerformanceSDKTestSv {
 	 */
 	public int insertIndivCust(SecurityPerformanceTestRequest entity) throws SQLException {
 		// 插入 SQL（字段按你的表结构写全）
-		String sql = "INSERT INTO cm_indiv_customer_hd_574 (" +
+		String sql = "INSERT INTO cm_indiv_customer_yx_574 (" +
 				"indiv_cust_id, base_cust_id, cust_name, cust_address, " +
 				"cust_cert_type, cust_cert_code, cust_cert_address, state, " +
 				"done_code, done_date, effective_date, expire_date, " +
@@ -438,7 +438,7 @@ public class SecurityPerformanceSDKTestSv {
 	 */
 	public int batchInsertIndivCust(List<SecurityPerformanceTestRequest> list) throws SQLException {
 		// 插入 SQL（和你原来完全一致）
-		String sql = "INSERT INTO cm_indiv_customer_hd_574 (" +
+		String sql = "INSERT INTO cm_indiv_customer_yx_574 (" +
 				"indiv_cust_id, base_cust_id, cust_name, cust_address, " +
 				"cust_cert_type, cust_cert_code, cust_cert_address, state, " +
 				"done_code, done_date, effective_date, expire_date, " +
