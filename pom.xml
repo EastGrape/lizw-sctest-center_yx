@@ -16,6 +16,14 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compilerPlugin.version>3.8.1</maven.compilerPlugin.version>
+        <!-- 兼容老 Maven 环境；3.x antrun 插件要求 Maven 3.2.5+，原程序旧 Maven 会在打包阶段失败。 -->
+        <maven.antrunPlugin.version>1.8</maven.antrunPlugin.version>
+
+        <!-- SDK 本地包目录：真实环境下私服依赖可正常下载，仅 SDK 最新包从 src/sdk-lib 固定打入 Spring Boot jar。 -->
+        <sdk.lib.dir>${project.basedir}/src/sdk-lib</sdk.lib.dir>
+        <bcprov.version>1.78.1</bcprov.version>
+        <sdk.core.version>1.0.0</sdk.core.version>
+        <sdk.algorithm.version>1.0.0</sdk.algorithm.version>
     </properties>
 
     <dependencyManagement>
@@ -55,12 +63,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
@@ -69,6 +71,51 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>4.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>antDB</groupId>
+            <artifactId>antdb</artifactId>
+            <version>6.0</version>
+            <scope>system</scope>
+            <systemPath>${sdk.lib.dir}/antdb-6.0.jar</systemPath>
+        </dependency>
+        <!-- SDK 加解密本体：使用本地最新 SDK jar，配合 spring-boot-maven-plugin 的 includeSystemScope 打入 BOOT-INF/lib。 -->
+        <dependency>
+            <groupId>com.asiainfo.cass</groupId>
+            <artifactId>cass-endecryption-agent-sdk</artifactId>
+            <version>${sdk.core.version}</version>
+            <scope>system</scope>
+            <systemPath>${sdk.lib.dir}/cass-endecryption-agent-sdk-${sdk.core.version}.jar</systemPath>
+        </dependency>
+        <!-- SDK 算法实现包：文件名必须保持 cass-agent-sdk-algorithm*.jar，SDK 初始化时按该规则扫描算法 jar。 -->
+        <dependency>
+            <groupId>com.asiainfo.cass</groupId>
+            <artifactId>cass-agent-sdk-algorithm</artifactId>
+            <version>${sdk.algorithm.version}</version>
+            <scope>system</scope>
+            <systemPath>${sdk.lib.dir}/cass-agent-sdk-algorithm-${sdk.algorithm.version}.jar</systemPath>
+        </dependency>
+        <!-- SDK 算法依赖的 BouncyCastle 包：放入 BOOT-INF/lib，供 SDK 自定义算法类加载器按 bcprov-jdk15to18* 规则扫描。 -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15to18</artifactId>
+            <version>${bcprov.version}</version>
+            <scope>system</scope>
+            <systemPath>${sdk.lib.dir}/bcprov-jdk15to18-${bcprov.version}.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -89,11 +136,44 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
+                <configuration>
+                    <!-- 将 system 作用域的本地 SDK jar 一并打入 BOOT-INF/lib；普通私服依赖仍按 Maven 依赖树自动处理。 -->
+                    <includeSystemScope>true</includeSystemScope>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.antrunPlugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>expose-sdk-algorithm-api</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <!--
+                                    SDK 算法类加载器的父加载器是系统类加载器，系统类加载器默认看不到 BOOT-INF/lib。
+                                    将当前 SDK 混淆后的算法接口类放到可执行 jar 外层根目录，避免初始化时报 algorithm classloader mismatch。
+                                -->
+                                <jar destfile="${project.build.directory}/${project.build.finalName}.jar"
+                                     update="true"
+                                     compress="false">
+                                    <zipfileset src="${sdk.lib.dir}/cass-agent-sdk-algorithm-${sdk.algorithm.version}.jar">
+                                        <include name="com.asiainfo.cass.endecryption.sdk.algorithm.Algorithm"/>
+                                    </zipfileset>
+                                </jar>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

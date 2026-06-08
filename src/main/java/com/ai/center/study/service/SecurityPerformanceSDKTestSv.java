@@ -1,7 +1,6 @@
 package com.ai.center.study.service;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.asiainfo.cass.agentsdk.endecryption.db.AsiaAgentSdk;
+import com.asiainfo.cass.agentsdk.endecryption.db.CryptoSession;
 import org.springframework.stereotype.Service;
 
 import com.ai.center.study.domain.IndivCustEntity;
@@ -17,11 +18,21 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 
-
+/**
+ * SDK安全性能测试服务
+ * <p>
+ * 面向当前压测接口执行数据库读写，并在SDK批量业务场景中复用会话式加解密接口。
+ *
+ * @author xiangqi
+ * @date 2026-06-08 18:16
+ */
 @Service
 public class SecurityPerformanceSDKTestSv {
+	// 压测数据库JDBC连接地址
 	final static String aiga_tns = "jdbc:postgresql://10.179.95.94:6432/teu?targetServerType=master&binaryTransfer=False&forceBinary=False&reWriteBatchedInserts=true&grammar=oracle&prepareThreshold=0";
+	// 压测数据库用户名
 	final static String aiga_user = "teu1";
+	// 压测数据库密码
 	final static String aiga_passwd = "dt_encry_test1ENC#";
 	//不带条件返回单条单加密字段
 	public IndivCustEntity getCustomerColumnLimitOne() throws SQLException{
@@ -44,7 +55,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
 				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustAddress(AsiaAgentSdk.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
 				entity.setCustCertCode(rs.getString("cust_cert_code"));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
@@ -74,7 +85,8 @@ public class SecurityPerformanceSDKTestSv {
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
 		List<IndivCustEntity> entitys = new ArrayList<>();
-		try{
+		try (CryptoSession cryptoSession = AsiaAgentSdk.openCryptoSession()){
+			SdkCryptoOperations cryptoOperations = new CryptoSessionSdkCryptoOperations(cryptoSession);
 			conn = dataSource.getConnection();
 			psCon = conn.prepareStatement(sql);
 			// 给占位符赋值
@@ -86,7 +98,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
 				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustAddress(cryptoOperations.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
 				entity.setCustCertCode(rs.getString("cust_cert_code"));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
@@ -120,7 +132,7 @@ public class SecurityPerformanceSDKTestSv {
 		try{
 			conn = dataSource.getConnection();
 			psCon = conn.prepareStatement(sql);
-			psCon.setString(1, request.getPhoneNumber());
+            psCon.setString(1, AsiaAgentSdk.encrypt(request.getPhoneNumber()));
 			// 给占位符赋值
 			rs = psCon.executeQuery();
 
@@ -129,10 +141,10 @@ public class SecurityPerformanceSDKTestSv {
 				// ========== 字段赋值：数据库字段 → Entity属性 ==========
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
-				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustName(AsiaAgentSdk.decrypt(rs.getString("cust_name")));
+                entity.setCustAddress(AsiaAgentSdk.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
-				entity.setCustCertCode(rs.getString("cust_cert_code"));
+                entity.setCustCertCode(AsiaAgentSdk.decrypt(rs.getString("cust_cert_code")));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
 				entity.setState(rs.getString("state"));
 				entity.setDoneCode(rs.getBigDecimal("done_code"));
@@ -141,7 +153,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setExpireDate(rs.getDate("expire_date"));
 				entity.setRegionId(rs.getString("region_id"));
 				entity.setCountyId(rs.getString("county_id"));
-				entity.setPhoneNumber(rs.getString("phone_number"));
+                entity.setPhoneNumber(AsiaAgentSdk.decrypt(rs.getString("phone_number")));
 			}
 		}finally {
 			// 关闭资源，防止连接泄露
@@ -160,11 +172,12 @@ public class SecurityPerformanceSDKTestSv {
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
 		List<IndivCustEntity> entitys = new ArrayList<>();
-		try{
+		try (CryptoSession cryptoSession = AsiaAgentSdk.openCryptoSession()){
+			SdkCryptoOperations cryptoOperations = new CryptoSessionSdkCryptoOperations(cryptoSession);
 			conn = dataSource.getConnection();
 			psCon = conn.prepareStatement(sql);
 			// 给占位符赋值
-			psCon.setString(1, request.getPhoneNumber());
+            psCon.setString(1, cryptoOperations.encrypt(request.getPhoneNumber()));
 			rs = psCon.executeQuery();
 
 			while(rs.next()){
@@ -172,10 +185,10 @@ public class SecurityPerformanceSDKTestSv {
 				// ========== 字段赋值：数据库字段 → Entity属性 ==========
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
-				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustName(cryptoOperations.decrypt(rs.getString("cust_name")));
+                entity.setCustAddress(cryptoOperations.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
-				entity.setCustCertCode(rs.getString("cust_cert_code"));
+                entity.setCustCertCode(cryptoOperations.decrypt(rs.getString("cust_cert_code")));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
 				entity.setState(rs.getString("state"));
 				entity.setDoneCode(rs.getBigDecimal("done_code"));
@@ -184,7 +197,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setExpireDate(rs.getDate("expire_date"));
 				entity.setRegionId(rs.getString("region_id"));
 				entity.setCountyId(rs.getString("county_id"));
-				entity.setPhoneNumber(rs.getString("phone_number"));
+                entity.setPhoneNumber(cryptoOperations.decrypt(rs.getString("phone_number")));
 				entitys.add(entity);
 			}
 		}finally {
@@ -208,10 +221,10 @@ public class SecurityPerformanceSDKTestSv {
 		try{
 			conn = dataSource.getConnection();
 			psCon = conn.prepareStatement(sql);
-			psCon.setString(1, request.getCustName());
-			psCon.setString(2, request.getCustAddress());
-			psCon.setString(3, request.getCustCertCode());
-			psCon.setString(4, request.getPhoneNumber());
+            psCon.setString(1, AsiaAgentSdk.encrypt(request.getCustName()));
+            psCon.setString(2, AsiaAgentSdk.encrypt(request.getCustAddress(), true));
+            psCon.setString(3, AsiaAgentSdk.encrypt(request.getCustCertCode()));
+            psCon.setString(4, AsiaAgentSdk.encrypt(request.getPhoneNumber()));
 			// 给占位符赋值
 			rs = psCon.executeQuery();
 
@@ -220,10 +233,10 @@ public class SecurityPerformanceSDKTestSv {
 				// ========== 字段赋值：数据库字段 → Entity属性 ==========
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
-				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustName(AsiaAgentSdk.decrypt(rs.getString("cust_name")));
+                entity.setCustAddress(AsiaAgentSdk.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
-				entity.setCustCertCode(rs.getString("cust_cert_code"));
+                entity.setCustCertCode(AsiaAgentSdk.decrypt(rs.getString("cust_cert_code")));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
 				entity.setState(rs.getString("state"));
 				entity.setDoneCode(rs.getBigDecimal("done_code"));
@@ -232,7 +245,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setExpireDate(rs.getDate("expire_date"));
 				entity.setRegionId(rs.getString("region_id"));
 				entity.setCountyId(rs.getString("county_id"));
-				entity.setPhoneNumber(rs.getString("phone_number"));
+                entity.setPhoneNumber(AsiaAgentSdk.decrypt(rs.getString("phone_number")));
 			}
 		}finally {
 			// 关闭资源，防止连接泄露
@@ -303,7 +316,7 @@ public class SecurityPerformanceSDKTestSv {
 			psCon = conn.prepareStatement(sql);
 
 			// 模糊查询关键：前后加 %
-			psCon.setString(1, "%" + request.getCustAddress() + "%");
+            psCon.setString(1, AsiaAgentSdk.encryptByLikeQuery("%" + request.getCustAddress() + "%"));
 
 			rs = psCon.executeQuery();
 
@@ -312,7 +325,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
 				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustAddress(AsiaAgentSdk.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
 				entity.setCustCertCode(rs.getString("cust_cert_code"));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
@@ -342,11 +355,12 @@ public class SecurityPerformanceSDKTestSv {
 		PreparedStatement psCon = null;
 		ResultSet rs = null;
 		List<IndivCustEntity> entitys = new ArrayList<>();
-		try{
+		try (CryptoSession cryptoSession = AsiaAgentSdk.openCryptoSession()){
+			SdkCryptoOperations cryptoOperations = new CryptoSessionSdkCryptoOperations(cryptoSession);
 			conn = dataSource.getConnection();
 			psCon = conn.prepareStatement(sql);
 			// 给占位符赋值
-			psCon.setString(1, "%" + request.getCustAddress() + "%");
+            psCon.setString(1, cryptoOperations.encryptByLikeQuery("%" + request.getCustAddress() + "%"));
 			rs = psCon.executeQuery();
 
 			while(rs.next()){
@@ -355,7 +369,7 @@ public class SecurityPerformanceSDKTestSv {
 				entity.setIndivCustId(rs.getBigDecimal("indiv_cust_id"));
 				entity.setBaseCustId(rs.getBigDecimal("base_cust_id"));
 				entity.setCustName(rs.getString("cust_name"));
-				entity.setCustAddress(rs.getString("cust_address"));
+                entity.setCustAddress(cryptoOperations.decrypt(rs.getString("cust_address")));
 				entity.setCustCertType(rs.getInt("cust_cert_type"));
 				entity.setCustCertCode(rs.getString("cust_cert_code"));
 				entity.setCustCertAddress(rs.getString("cust_cert_address"));
@@ -406,10 +420,10 @@ public class SecurityPerformanceSDKTestSv {
 			// ===================== 开始按顺序赋值 =====================
 			pstmt.setBigDecimal(index++, new BigDecimal(id));
 			pstmt.setBigDecimal(index++, entity.getBaseCustId());
-			pstmt.setString(index++, entity.getCustName());
-			pstmt.setString(index++, entity.getCustAddress());
+            pstmt.setString(index++, AsiaAgentSdk.encrypt(entity.getCustName()));
+            pstmt.setString(index++, AsiaAgentSdk.encrypt(entity.getCustAddress(), true));
 			pstmt.setInt(index++, entity.getCustCertType());
-			pstmt.setString(index++, entity.getCustCertCode());
+            pstmt.setString(index++, AsiaAgentSdk.encrypt(entity.getCustCertCode()));
 			pstmt.setString(index++, entity.getCustCertAddress());
 			pstmt.setString(index++, entity.getState());
 			pstmt.setBigDecimal(index++, entity.getDoneCode());
@@ -418,7 +432,7 @@ public class SecurityPerformanceSDKTestSv {
 			pstmt.setDate(index++, entity.getExpireDate() == null ? null : new java.sql.Date(entity.getExpireDate().getTime()));
 			pstmt.setString(index++, entity.getRegionId());
 			pstmt.setString(index++, entity.getCountyId());
-			pstmt.setString(index++, entity.getPhoneNumber());
+            pstmt.setString(index++, AsiaAgentSdk.encrypt(entity.getPhoneNumber()));
 			// 执行插入
 			rows = pstmt.executeUpdate();
 
@@ -449,7 +463,8 @@ public class SecurityPerformanceSDKTestSv {
 		PreparedStatement pstmt = null;
 		int totalRows = 0;
 
-		try {
+		try (CryptoSession cryptoSession = AsiaAgentSdk.openCryptoSession()) {
+			SdkCryptoOperations cryptoOperations = new CryptoSessionSdkCryptoOperations(cryptoSession);
 			conn = dataSource.getConnection();
 			// 关闭自动提交，开启批量模式
 			conn.setAutoCommit(false);
@@ -467,7 +482,7 @@ public class SecurityPerformanceSDKTestSv {
 				pstmt.setBigDecimal(index++, new BigDecimal(id));
 				pstmt.setBigDecimal(index++, entity.getBaseCustId());
 				pstmt.setString(index++, entity.getCustName());
-				pstmt.setString(index++, entity.getCustAddress());
+                pstmt.setString(index++, cryptoOperations.encrypt(entity.getCustAddress()));
 				pstmt.setInt(index++, entity.getCustCertType());
 				pstmt.setString(index++, entity.getCustCertCode());
 				pstmt.setString(index++, entity.getCustCertAddress());
