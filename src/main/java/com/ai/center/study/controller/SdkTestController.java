@@ -16,13 +16,13 @@ import com.ai.center.study.service.dto.SecurityPerformanceTestRequest;
 
 @RestController
 public class SdkTestController {
-	
-	
-   
+
+
+
 	@Autowired
 	private SecurityPerformanceSDKTestSv securityPerformanceSDKTestSv;
-    
-    
+
+
 	//安全数据接口调用，单条插入
 	@RequestMapping(path="dev/SecuritySDKTest/insertone",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object test(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
@@ -34,12 +34,6 @@ public class SdkTestController {
 	public Object batchInsertIndivCust(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
 
 		return securityPerformanceSDKTestSv.batchInsertIndivCust(requests);
-	}
-	//安全数据接口调用，根据id单条获取
-	@RequestMapping(path="dev/SecuritySDKTest/getone",method = {RequestMethod.GET,RequestMethod.POST})
-	public Object testGetOne(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
-
-		return securityPerformanceSDKTestSv.getCustomerTest(request);
 	}
 	//不带条件返回单条单加密字段
 	@RequestMapping(path="dev/SecuritySDKTest/getCustomerColumnLimitOne",method = {RequestMethod.GET,RequestMethod.POST})
@@ -53,40 +47,40 @@ public class SdkTestController {
 
 		return securityPerformanceSDKTestSv.getCustomerColumnLimit1k();
 	}
-	
+
 	//带custname条件返回单条单加密字段
-	@RequestMapping(path="dev/SecuritySDKTest/getOneByCustName",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getOneByPhoneNumber",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getOneByCustName(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getOneByCustName(request);
 	}
 	//带custname条件返回1K
-	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByCustName",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByPhoneNumber",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getCustomerLimit1kByCustName(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getCustomerLimit1kByCustName(request);
 	}
 	//带多个条件返回单条单加密字段
-	@RequestMapping(path="dev/SecuritySDKTest/getOneByCustNameAndCertCode",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getOneByFourColumn",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getOneByCustNameAndCertCode(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getOneByCustNameAndCertCode(request);
 	}
 	//带多个条件条件返回1K
-	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByCustNameAndCertCode",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByFourColumn",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getCustomerLimit1kByCustNameAndCertCode(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getCustomerLimit1kByCustNameAndCertCode(request);
 	}
-	
+
 	//带单个条件like
-	@RequestMapping(path="dev/SecuritySDKTest/getOneByCustNameLike",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getOneByCustAddressLike",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getOneByCustNameLike(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getOneByCustNameLike(request);
 	}
 	//带多个条件like
-	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByCustNameLike",method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByCustAddresseLike",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object getCustomerLimit1kByCustNameLike(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getCustomerLimit1kByCustNameLike(request);
