@@ -398,6 +398,59 @@ public class SecurityPerformanceSDKTestSv {
 	 * @return 受影响行数（1=成功，0=失败）
 	 * @throws SQLException
 	 */
+	public int insertIndivCustOneColumn(SecurityPerformanceTestRequest entity) throws SQLException {
+		// 插入 SQL（字段按你的表结构写全）
+		String sql = "INSERT INTO cm_indiv_customer_yx_574 (" +
+				"indiv_cust_id, base_cust_id, cust_name, cust_address, " +
+				"cust_cert_type, cust_cert_code, cust_cert_address, state, " +
+				"done_code, done_date, effective_date, expire_date, " +
+				"region_id, county_id, phone_number " +
+				") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int rows = 0;
+
+		try {
+			// 获取连接（你原来的配置）
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			int index = 1;
+			long id = ThreadLocalRandom.current().nextLong(1000000000000L, 10000000000000L);
+			// ===================== 开始按顺序赋值 =====================
+			pstmt.setBigDecimal(index++, new BigDecimal(id));
+			pstmt.setBigDecimal(index++, entity.getBaseCustId());
+			pstmt.setString(index++, entity.getCustName());
+			pstmt.setString(index++, AsiaAgentSdk.encrypt(entity.getCustAddress(), true));
+			pstmt.setInt(index++, entity.getCustCertType());
+			pstmt.setString(index++, entity.getCustCertCode());
+			pstmt.setString(index++, entity.getCustCertAddress());
+			pstmt.setString(index++, entity.getState());
+			pstmt.setBigDecimal(index++, entity.getDoneCode());
+			pstmt.setDate(index++, entity.getDoneDate() == null ? null : new java.sql.Date(entity.getDoneDate().getTime()));
+			pstmt.setDate(index++, entity.getEffectiveDate() == null ? null : new java.sql.Date(entity.getEffectiveDate().getTime()));
+			pstmt.setDate(index++, entity.getExpireDate() == null ? null : new java.sql.Date(entity.getExpireDate().getTime()));
+			pstmt.setString(index++, entity.getRegionId());
+			pstmt.setString(index++, entity.getCountyId());
+			pstmt.setString(index++, entity.getPhoneNumber());
+			// 执行插入
+			rows = pstmt.executeUpdate();
+
+		} finally {
+			// 关闭资源
+			if (pstmt != null) pstmt.close();
+			if (conn != null) conn.close();
+		}
+
+		return rows;
+	}
+
+	/**
+	 * 单条数据插入方法
+	 * @param entity 要插入的客户实体
+	 * @return 受影响行数（1=成功，0=失败）
+	 * @throws SQLException
+	 */
 	public int insertIndivCust(SecurityPerformanceTestRequest entity) throws SQLException {
 		// 插入 SQL（字段按你的表结构写全）
 		String sql = "INSERT INTO cm_indiv_customer_yx_574 (" +

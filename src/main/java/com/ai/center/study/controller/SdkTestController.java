@@ -30,10 +30,16 @@ public class SdkTestController {
 	@Autowired
 	private SecurityPerformanceSDKTestSv securityPerformanceSDKTestSv;
 
+	//单字段单条加密写入性能
+	@RequestMapping(path="dev/SecuritySDKTest/insertIndivCustOneColumn",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object insertIndivCustOneColumn(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
+
+		return securityPerformanceSDKTestSv.insertIndivCustOneColumn(request);
+	}
 
 	//安全数据接口调用，单条四字段加密插入
 	@RequestMapping(path="dev/SecuritySDKTest/insertone",method = {RequestMethod.GET,RequestMethod.POST})
-	public Object test(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
+	public Object insertone(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.insertIndivCust(request);
 	}
@@ -73,12 +79,6 @@ public class SdkTestController {
 	public Object getOneByCustNameAndCertCode(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
 
 		return securityPerformanceSDKTestSv.getOneByCustNameAndCertCode(request);
-	}
-	//带四个加密字段等值条件返回1000条
-	@RequestMapping(path="dev/SecuritySDKTest/getCustomerLimit1kByFourColumn",method = {RequestMethod.GET,RequestMethod.POST})
-	public Object getCustomerLimit1kByCustNameAndCertCode(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
-
-		return securityPerformanceSDKTestSv.getCustomerLimit1kByCustNameAndCertCode(request);
 	}
 
 	//带cust_address单字段LIKE条件返回单条

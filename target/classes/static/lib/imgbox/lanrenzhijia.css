@@ -1,7 +1,0 @@
-// #content{ width:500px; height:170px; margin:100px auto;}
-#imgbox-overlay {position: absolute;top: 0;	left: 0;width: 100%;height: 100%;background: #000;display: none;z-index: 1200;}
-.imgbox-wrap {position: absolute;top: 0;left: 0;background: #FFF;display: none;	z-index: 1201;}
-.imgbox-img {padding: 0;margin: 0;border: none;width: 100%;	height: 100%;vertical-align: top;}
-// .imgbox-title {	padding-top: 10px;font-size: 11px;text-align: center;font-family: Arial;color: #333;display: none;}
-.imgbox-bg-wrap {position: absolute;padding: 0;margin: 0;display: none; z-index: 1201;}
-.imgbox-bg {position: absolute;width: 20px;	height: 20px;}
