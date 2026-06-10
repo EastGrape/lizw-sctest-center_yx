@@ -20,9 +20,9 @@ import com.zaxxer.hikari.HikariDataSource;
 
 @Service
 public class SecurityPerformanceTestSv {
-	final static String aiga_tns = "jdbc:postgresql://10.179.95.94:6432/teu?targetServerType=master&binaryTransfer=False&forceBinary=False&reWriteBatchedInserts=true&grammar=oracle&prepareThreshold=0";
-	final static String aiga_user = "teu1";
-	final static String aiga_passwd = "dt_encry_test1ENC#";
+	final static String aiga_tns = readDbConfig("sctest.jdbc.url", "SCTEST_JDBC_URL", "jdbc:postgresql://10.179.95.94:6432/teu?targetServerType=master&binaryTransfer=False&forceBinary=False&reWriteBatchedInserts=true&grammar=oracle&prepareThreshold=0");
+	final static String aiga_user = readDbConfig("sctest.jdbc.user", "SCTEST_JDBC_USER", "teu1");
+	final static String aiga_passwd = readDbConfig("sctest.jdbc.password", "SCTEST_JDBC_PASSWORD", "dt_encry_test1ENC#");
 	//不带条件返回单条单加密字段
 	public IndivCustEntity getCustomerColumnLimitOne() throws SQLException{
 
@@ -544,6 +544,27 @@ public class SecurityPerformanceTestSv {
 			throw new ExceptionInInitializerError("数据库连接池初始化失败：" + e.getMessage());
 		}
 	}
+
+	/**
+	 * 读取压测数据库连接配置
+	 * <p>
+	 * 默认保持现场硬编码配置，本机Docker复现时可用JVM参数或环境变量覆盖，避免修改业务SQL和接口代码。
+	 *
+	 * @Author xiangqi
+	 * @date 2026-06-09 22:19
+	 * @Param propertyName JVM参数名
+	 * @Param envName 环境变量名
+	 * @Param defaultValue 默认值
+	 * @Return java.lang.String
+	 */
+	private static String readDbConfig(String propertyName, String envName, String defaultValue) {
+		String value = System.getProperty(propertyName);
+		if (value == null || value.trim().length() == 0) {
+			value = System.getenv(envName);
+		}
+		return value == null || value.trim().length() == 0 ? defaultValue : value;
+	}
+
 	public static void main(String args[]) throws SQLException{
 		SecurityPerformanceTestSv sv=new SecurityPerformanceTestSv();
 		IndivCustEntity result=sv.getCustomerColumnLimitOne();
