@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import com.asiainfo.cass.agentsdk.endecryption.db.AsiaAgentSdk;
-import com.asiainfo.cass.agentsdk.endecryption.db.CryptoSession;
+import com.asiainfo.cass.agentsdk.endecryption.db.model.CryptoSession;
 import org.springframework.stereotype.Service;
 
 import com.ai.center.study.domain.IndivCustEntity;

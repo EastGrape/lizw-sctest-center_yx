@@ -74,12 +74,18 @@
         </dependency>
 
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!--<dependency>
             <groupId>antDB</groupId>
             <artifactId>antdb</artifactId>
             <version>6.0</version>
             <scope>system</scope>
             <systemPath>${sdk.lib.dir}/antdb-6.0.jar</systemPath>
-        </dependency>
+        </dependency>-->
         <!-- SDK 加解密本体：使用本地最新 SDK jar，配合 spring-boot-maven-plugin 的 includeSystemScope 打入 BOOT-INF/lib。 -->
         <dependency>
             <groupId>com.asiainfo.cass</groupId>

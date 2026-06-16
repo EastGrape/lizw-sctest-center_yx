@@ -1,6 +1,6 @@
 package com.ai.center.study.service;
 
-import com.asiainfo.cass.agentsdk.endecryption.db.CryptoSession;
+import com.asiainfo.cass.agentsdk.endecryption.db.model.CryptoSession;
 
 import java.util.Objects;
 
