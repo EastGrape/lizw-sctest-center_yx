@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.ai.center.study.controller.BatchInsertRequestBuilder;
 import com.asiainfo.cass.agentsdk.endecryption.db.AsiaAgentSdk;
 import com.asiainfo.cass.agentsdk.endecryption.db.model.CryptoSession;
 import org.springframework.stereotype.Service;
@@ -395,6 +396,33 @@ public class SecurityPerformanceSDKTestSv {
             if (conn != null) conn.close();
         }
         return entitys;
+    }
+
+    /**
+     * 根据客户ID更新客户地址
+     * <p>
+     * SDK场景先按cust_address写入规则加密，再通过indiv_cust_id更新指定客户。
+     *
+     * @Author xiangqi
+     * @date 2026-06-30 18:20
+     * @Param request 客户地址更新请求
+     * @Return int
+     */
+    public int updateCustAddressById(SecurityPerformanceTestRequest request) throws SQLException {
+        BatchInsertRequestBuilder.validate(request);
+        String sql = "update cm_indiv_customer_yx_574 set cust_address=? where indiv_cust_id=?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = dataSource.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, AsiaAgentSdk.encrypt(request.getCustAddress(), true));
+            pstmt.setBigDecimal(2, request.getIndivCustId());
+            return pstmt.executeUpdate();
+        } finally {
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        }
     }
 
     /**

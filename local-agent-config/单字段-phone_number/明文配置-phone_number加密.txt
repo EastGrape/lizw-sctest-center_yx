@@ -1,0 +1,25 @@
+{
+	"monitor_interval": -1,
+	"schema": "teu1",
+	"release_id": 1,
+	"perf_stats_log_interval_seconds": "60",
+	"encrypt_enabled": "true",
+	"refresh_flag": 1,
+	"log_level": "NONE",
+	"dcAgentCipherTextVersion": "v2",
+	"agent_enabled": "true",
+	"refresh_time": 30,
+	"perf_stats_log_enabled": "false",
+	"mixed_mode_enabled": "0",
+	"database": {
+		"teu1": {
+			"CM_INDIV_CUSTOMER_YX_574": {
+				"salt": "SM4:6133663037653963346238326431356538633064336232613734653931663663:phone_number"
+			}
+		}
+	},
+	"auto_update": 30,
+	"auth_user": {},
+	"decrypt_enabled": "true",
+	"conflict": false
+}

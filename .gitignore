@@ -1,1 +1,8 @@
 /target
+local-agent-config/*.log
+local-agent-config/*.pid
+local-agent-config/*.mode
+local-agent-config/**/temp/
+local-agent-config/**/lizw-sctest-center-yx-local-*/
+local-agent-config/endecryption-agent-unknown/
+local-agent-config/zhejiang-test/

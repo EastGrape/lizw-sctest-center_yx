@@ -43,11 +43,41 @@ public class SdkTestController {
 
 		return securityPerformanceSDKTestSv.insertIndivCust(request);
 	}
+	//安全数据接口调用，根据客户ID更新cust_address
+	@RequestMapping(path="dev/SecuritySDKTest/updateCustAddressById",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object updateCustAddressById(@RequestBody SecurityPerformanceTestRequest request) throws Exception{
+
+		return securityPerformanceSDKTestSv.updateCustAddressById(request);
+	}
 	//安全数据接口调用，批量插入，每100条插入一次
 	@RequestMapping(path="dev/SecuritySDKTest/insertBatch",method = {RequestMethod.GET,RequestMethod.POST})
 	public Object batchInsertIndivCust(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
 
 		return securityPerformanceSDKTestSv.batchInsertIndivCust(requests);
+	}
+	//安全数据接口调用，取外部前50条报文批量插入
+	@RequestMapping(path="dev/SecuritySDKTest/insertBatch50",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object batchInsertIndivCust50(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
+
+		return securityPerformanceSDKTestSv.batchInsertIndivCust(BatchInsertRequestBuilder.build(requests, 50));
+	}
+	//安全数据接口调用，按外部前100条报文复制为500条批量插入
+	@RequestMapping(path="dev/SecuritySDKTest/insertBatch500",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object batchInsertIndivCust500(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
+
+		return securityPerformanceSDKTestSv.batchInsertIndivCust(BatchInsertRequestBuilder.build(requests, 500));
+	}
+	//安全数据接口调用，按外部前100条报文复制为1000条批量插入
+	@RequestMapping(path="dev/SecuritySDKTest/insertBatch1000",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object batchInsertIndivCust1000(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
+
+		return securityPerformanceSDKTestSv.batchInsertIndivCust(BatchInsertRequestBuilder.build(requests, 1000));
+	}
+	//安全数据接口调用，按外部前100条报文复制为10000条批量插入
+	@RequestMapping(path="dev/SecuritySDKTest/insertBatch10000",method = {RequestMethod.GET,RequestMethod.POST})
+	public Object batchInsertIndivCust10000(@RequestBody List<SecurityPerformanceTestRequest> requests) throws Exception{
+
+		return securityPerformanceSDKTestSv.batchInsertIndivCust(BatchInsertRequestBuilder.build(requests, 10000));
 	}
 	//不带条件返回单条，解密单字段cust_address
 	@RequestMapping(path="dev/SecuritySDKTest/getCustomerColumnLimitOne",method = {RequestMethod.GET,RequestMethod.POST})

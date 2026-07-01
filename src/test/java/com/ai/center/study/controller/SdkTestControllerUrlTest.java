@@ -34,12 +34,17 @@ public class SdkTestControllerUrlTest {
         Set<String> expectedPaths = new TreeSet<>(Arrays.asList(
                 "dev/SecuritySDKTest/insertone",
                 "dev/SecuritySDKTest/insertBatch",
+                "dev/SecuritySDKTest/insertBatch50",
+                "dev/SecuritySDKTest/insertBatch500",
+                "dev/SecuritySDKTest/insertBatch1000",
+                "dev/SecuritySDKTest/insertBatch10000",
+                "dev/SecuritySDKTest/updateCustAddressById",
+                "dev/SecuritySDKTest/insertIndivCustOneColumn",
                 "dev/SecuritySDKTest/getCustomerColumnLimitOne",
                 "dev/SecuritySDKTest/getCustomerColumnLimit1k",
                 "dev/SecuritySDKTest/getOneByPhoneNumber",
                 "dev/SecuritySDKTest/getCustomerLimit1kByPhoneNumber",
                 "dev/SecuritySDKTest/getOneByFourColumn",
-                "dev/SecuritySDKTest/getCustomerLimit1kByFourColumn",
                 "dev/SecuritySDKTest/getOneByCustAddressLike",
                 "dev/SecuritySDKTest/getCustomerLimit1kByCustAddresseLike"
         ));

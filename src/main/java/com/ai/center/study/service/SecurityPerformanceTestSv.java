@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.ai.center.study.controller.BatchInsertRequestBuilder;
 import org.springframework.stereotype.Service;
 
 import com.ai.center.study.domain.IndivCustEntity;
@@ -376,6 +377,33 @@ public class SecurityPerformanceTestSv {
 			if(conn != null) conn.close();
 		}
 		return entitys;
+	}
+
+	/**
+	 * 根据客户ID更新客户地址
+	 * <p>
+	 * JDBC Agent场景绑定明文cust_address，由Agent按配置完成透明加密写入。
+	 *
+	 * @Author xiangqi
+	 * @date 2026-06-30 18:20
+	 * @Param request 客户地址更新请求
+	 * @Return int
+	 */
+	public int updateCustAddressById(SecurityPerformanceTestRequest request) throws SQLException {
+		BatchInsertRequestBuilder.validate(request);
+		String sql = "update cm_indiv_customer_yx_574 set cust_address=? where indiv_cust_id=?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, request.getCustAddress());
+			pstmt.setBigDecimal(2, request.getIndivCustId());
+			return pstmt.executeUpdate();
+		} finally {
+			if (pstmt != null) pstmt.close();
+			if (conn != null) conn.close();
+		}
 	}
 
 	/**
